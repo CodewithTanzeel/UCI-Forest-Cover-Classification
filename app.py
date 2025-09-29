@@ -2,14 +2,22 @@ import streamlit as st
 import pickle
 import numpy as np
 from PIL import Image
+import os
 
 rfc = pickle.load(open('rfc.pkl', 'rb'))
 
 # Creating web app
 st.title('Forest Cover Type Prediction')
-image = Image.open('img.png')
-st.image(image, caption='myimage', use_column_width=True)
-user_input = st.text_input('Input Features')
+
+# Display main image only if it exists
+if os.path.exists('img.png'):
+    image = Image.open('img.png')
+    st.image(image, caption='Forest Cover Classification', use_column_width=True)
+else:
+    st.write("🌲 **Forest Cover Type Prediction System** 🌲")
+    st.write("Enter comma-separated feature values to predict the forest cover type.")
+
+user_input = st.text_input('Input Features (comma-separated values)')
 
 if user_input:
     user_input = user_input.split(',')
@@ -20,7 +28,6 @@ if user_input:
     cover_type_dict = {
         1: {"name": "Spruce/Fir", "image": "img_1.png"},
         2: {"name": "Lodgepole Pine", "image": "img_2.png"},
-        
         3: {"name": "Ponderosa Pine", "image": "img_3.png"},
         4: {"name": "Cottonwood/Willow", "image": "img_4.png"},
         5: {"name": "Aspen", "image": "img_5.png"},
@@ -44,7 +51,12 @@ if user_input:
             st.write(f"<h1 style='font-size: 40px; font-weight: bold;'>{cover_type_name}</h1>", unsafe_allow_html=True)
 
         with col2:
-            cover_type_image = Image.open(cover_type_image_path)
-            st.image(cover_type_image, caption=cover_type_name, use_column_width=True)
+            # Only display image if it exists
+            if os.path.exists(cover_type_image_path):
+                cover_type_image = Image.open(cover_type_image_path)
+                st.image(cover_type_image, caption=cover_type_name, use_column_width=True)
+            else:
+                st.write(f"🌲 **{cover_type_name}**")
+                st.write("(Image not available)")
     else:
         st.write("Unable to make a prediction")
