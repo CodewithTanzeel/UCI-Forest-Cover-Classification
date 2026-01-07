@@ -21,7 +21,7 @@ user_input = st.text_input('Input Features (comma-separated values)')
 
 if user_input:
     user_input = user_input.split(',')
-    features = np.array([user_input], dtype=np.float64)
+    features = np.array([user_input], dtype=np.float64)g
     output = rfc.predict(features).reshape(1, -1)
 
     # Create the cover type dictionary
